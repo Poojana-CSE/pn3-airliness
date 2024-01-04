@@ -1,0 +1,222 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+const int MAX_FLIGHTS = 10;
+const int MAX_SEATS = 35;
+const int MAX_NAME_LENGTH = 50;
+const int MAX_PASSENGERS = 100;
+
+typedef struct {
+    char name[MAX_NAME_LENGTH];
+    char date[20];
+    char day[20];
+    char from[50];
+    char to[50];
+    int classChoice;
+} Passenger;
+
+typedef struct {
+    int flightNumber;
+    char destination[50];
+    int economySeats;
+    int premiumEconomySeats;
+    int businessSeats;
+    Passenger* passengers;
+    int totalPassengers;
+} Flight;
+
+void displayMenu();
+void authenticateUser();
+void bookFlight(Flight* flights, int numFlights);
+void displayPassengerInfo(Flight* flights, int numFlights);
+void checkSeatAvailability(Flight* flights, int numFlights);
+void freeMemory(Flight* flights, int numFlights);
+
+int main() {
+    authenticateUser();
+
+    Flight* flights = (Flight*)malloc(MAX_FLIGHTS * sizeof(Flight));
+
+    if (flights == NULL) {
+        printf("Memory allocation failed. Exiting the program.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < MAX_FLIGHTS; ++i) {
+        flights[i].flightNumber = i + 1;
+        snprintf(flights[i].destination, sizeof(flights[i].destination), "Destination%d", i + 1);
+        flights[i].economySeats = MAX_SEATS;
+        flights[i].premiumEconomySeats = MAX_SEATS;
+        flights[i].businessSeats = MAX_SEATS;
+        flights[i].passengers = (Passenger*)malloc(MAX_PASSENGERS * sizeof(Passenger));
+        flights[i].totalPassengers = 0;
+    }
+
+    int choice;
+    do {
+        displayMenu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                bookFlight(flights, MAX_FLIGHTS);
+                break;
+            case 2:
+                displayPassengerInfo(flights, MAX_FLIGHTS);
+                break;
+            case 3:
+                checkSeatAvailability(flights, MAX_FLIGHTS);
+                break;
+            case 4:
+                printf("Exiting the program. Thank you!\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 4);
+
+    freeMemory(flights, MAX_FLIGHTS);
+
+    return 0;
+}
+
+void displayMenu() {
+    printf("\nPN3 Airline Reservation System \n");
+    printf("1. Book Flight\n");
+    printf("2. Display Passenger Information\n");
+    printf("3. Check Seat Availability\n");
+    printf("4. Exit\n");
+}
+
+void authenticateUser() {
+    char username[MAX_NAME_LENGTH];
+    char password[MAX_NAME_LENGTH];
+    char email[MAX_NAME_LENGTH];
+    int otp;
+printf("LOGIN || SIGNIN\n");
+    printf("Enter your name: ");
+    scanf("%s", username);
+
+    printf("Enter your password: ");
+    scanf("%s", password);
+
+    printf("Enter your email ID: ");
+    scanf("%s", email);
+
+    // Generate and send OTP (You can implement this function)
+
+    // Simulate OTP verification
+    printf("Enter the OTP received: ");
+    scanf("%d", &otp);
+
+    // Simulate OTP verification (You can implement this function)
+
+    printf("Authentication successful. Starting the program...\n");
+    sleep(2); // Delay for 2 seconds
+}
+
+void bookFlight(Flight* flights, int numFlights) {
+    // Implementation for booking a flight goes here
+    // Update flight and passenger data accordingly
+    // ...
+
+    printf("Enter your name: ");
+    scanf("%s", flights[0].passengers[flights[0].totalPassengers].name);
+
+    printf("Enter the date of the flight: ");
+    scanf("%s", flights[0].passengers[flights[0].totalPassengers].date);
+
+    printf("Enter the day of the flight: ");
+    scanf("%s", flights[0].passengers[flights[0].totalPassengers].day);
+
+    printf("Enter the departure city: ");
+    scanf("%s", flights[0].passengers[flights[0].totalPassengers].from);
+
+    printf("Enter the destination city: ");
+    scanf("%s", flights[0].passengers[flights[0].totalPassengers].to);
+
+      printf("Choose class (1 for Economy, 2 for Premium Economy, 3 for Business): ");
+      scanf("%d", &flights[0].passengers[flights[0].totalPassengers].classChoice);
+      // Update available seats for the booked class
+      switch (flights[0].passengers[flights[0].totalPassengers].classChoice) {
+        case 1:
+            flights[0].economySeats--;
+            break;
+        case 2:
+            flights[0].premiumEconomySeats--;
+            break;
+        case 3:
+            flights[0].businessSeats--;
+            break;
+        default:
+            printf("Invalid class choice.\n");
+            return;
+}
+printf("Enter your credit card number: ");
+    long long int creditCardNumber;
+    scanf("%lld", &creditCardNumber);
+    printf("Enter the expiration date (MMYY): ");
+    int expirationDate;
+    scanf("%d", &expirationDate);
+    printf("Enter your PIN: ");
+    int pin;
+    scanf("%d", &pin);
+
+    // Validation checks for credit card number and PIN can be added here
+
+    printf("Processing payment...");
+    // Validation checks for credit card number and PIN can be added here
+    sleep(1);  // Add a delay of 1 second
+    printf("\nPayment successful!\n");  // Updated message to include a delay
+    // Update the total number of passengers for the flight
+    flights[0].totalPassengers++;
+    printf("Flight booked successfully!\n");
+    // Ask for feedback
+    printf("We value your feedback! How was your experience with our services? Please share your feedback: ");
+    char feedback[100];
+    scanf("%s", feedback);
+    printf("Thank you for sharing your feedback! We hope to serve you better next time.\n");
+}
+
+
+void displayPassengerInfo(Flight* flights, int numFlights) {
+    printf("Enter the flight number: ");
+    int flightNum;
+    scanf("%d", &flightNum);
+
+    if (flightNum >= 1 && flightNum <= numFlights) {
+        printf("Displaying passenger information for Flight %d...\n", flightNum);
+
+        for (int i = 0; i < flights[flightNum - 1].totalPassengers; ++i) {
+            printf("Passenger %d:\n", i + 1);
+            printf("Name: %s\n", flights[flightNum - 1].passengers[i].name);
+            printf("Date: %s\n", flights[flightNum - 1].passengers[i].date);
+            printf("Day: %s\n", flights[flightNum - 1].passengers[i].day);
+            printf("Departure: %s\n", flights[flightNum - 1].passengers[i].from);
+            printf("Destination: %s\n", flights[flightNum - 1].passengers[i].to);
+            printf("Class: %d\n", flights[flightNum - 1].passengers[i].classChoice);
+            printf("-----------------------------\n");
+        }
+    } else {
+        printf("Invalid flight number. Please try again.\n");
+    }
+}
+
+
+void checkSeatAvailability(Flight* flights, int numFlights) {
+    printf("Checking seat availability for Flight 1...\n");
+
+    printf("Economy Class Seats Left: %d\n", flights[0].economySeats);
+    printf("Premium Economy Class Seats Left: %d\n", flights[0].premiumEconomySeats);
+    printf("Business Class Seats Left: %d\n", flights[0].businessSeats);
+}
+
+void freeMemory(Flight* flights, int numFlights) {
+    for (int i = 0; i < numFlights; ++i) {
+        free(flights[i].passengers);
+    }
+    free(flights);
+}
